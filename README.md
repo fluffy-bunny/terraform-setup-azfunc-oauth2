@@ -1,4 +1,4 @@
-# terraform-setup-azfunc-guidgen
+# terraform-setup-fluffy-oauth2
 This project terraforms azure by providing everything needed to deploy the azFunc-guidgen function.  
 
 ## Prerequisite
