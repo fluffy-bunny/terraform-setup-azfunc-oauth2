@@ -25,7 +25,10 @@ variable "func_name" {
   description = "(Required) func."
   type        = string
 }
-
+variable "keyvault_name" {
+  description = "(Required) The main keyvault."
+  type        = string
+}
 
 variable "tags" {
   description = "Tags to help identify various services."

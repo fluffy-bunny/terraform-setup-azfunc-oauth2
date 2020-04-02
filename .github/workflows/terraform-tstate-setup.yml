@@ -4,7 +4,7 @@ on:
   [push]
 
 env:
-  SHORT_NAME: githubactions  
+  SHORT_NAME: fluffyoauth2  
   LOCATION: 'eastus2'
 jobs:
  
@@ -66,10 +66,10 @@ jobs:
 
         ls
         cd src/
-        terraform init 
+        terraform init -reconfigure
         popd
 
-    - name: 'Terraform Plan'
+    - name: 'Terraform Setup Function First'
       shell: bash
       run: |
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
@@ -81,20 +81,39 @@ jobs:
 
         ls
         cd src/
-        terraform plan -out=tf.plan
+        terraform plan -out=tf.plan -target=azurerm_function_app.main
+        terraform apply tf.plan
+        popd
+
+    - name: 'Terraform Setup KeyVault Second'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        export ARM_ACCESS_KEY=$(az keyvault secret show --name ${{ steps.tfsetup.outputs.secret_name }} --vault-name ${{ steps.tfsetup.outputs.keyvault_name }} --query value -o tsv)
+        export ARM_CLIENT_ID='${{secrets.ARM_CLIENT_ID}}'
+        export ARM_CLIENT_SECRET='${{secrets.ARM_CLIENT_SECRET}}'
+        export ARM_SUBSCRIPTION_ID=$(az account show --query id | xargs)
+        export ARM_TENANT_ID=$(az account show --query tenantId | xargs)
+
+        ls
+        cd src/
+        terraform plan -out=tf.plan -target=azurerm_key_vault.main
+        terraform apply tf.plan
+        popd
+
+    - name: 'Terraform Setup Final'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        export ARM_ACCESS_KEY=$(az keyvault secret show --name ${{ steps.tfsetup.outputs.secret_name }} --vault-name ${{ steps.tfsetup.outputs.keyvault_name }} --query value -o tsv)
+        export ARM_CLIENT_ID='${{secrets.ARM_CLIENT_ID}}'
+        export ARM_CLIENT_SECRET='${{secrets.ARM_CLIENT_SECRET}}'
+        export ARM_SUBSCRIPTION_ID=$(az account show --query id | xargs)
+        export ARM_TENANT_ID=$(az account show --query tenantId | xargs)
+
+        ls
+        cd src/
+        terraform plan -out=tf.plan 
+        terraform apply tf.plan
         popd
   
-    - name: 'Terraform Apply'
-      shell: bash
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        export ARM_ACCESS_KEY=$(az keyvault secret show --name ${{ steps.tfsetup.outputs.secret_name }} --vault-name ${{ steps.tfsetup.outputs.keyvault_name }} --query value -o tsv)
-        export ARM_CLIENT_ID='${{secrets.ARM_CLIENT_ID}}'
-        export ARM_CLIENT_SECRET='${{secrets.ARM_CLIENT_SECRET}}'
-        export ARM_SUBSCRIPTION_ID=$(az account show --query id | xargs)
-        export ARM_TENANT_ID=$(az account show --query tenantId | xargs)
-
-        ls
-        cd src/
-        terraform apply tf.plan
-        popd 

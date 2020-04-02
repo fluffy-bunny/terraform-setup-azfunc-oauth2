@@ -4,20 +4,26 @@ terraform {
     # Do not declare an access_key here. Instead, export the
     # ARM_ACCESS_KEY environment variable.
 
-    storage_account_name  = "stterraformgithubactions"
+    storage_account_name  = "stterraformfluffyoauth2"
     container_name        = "tstate"
     key                   = "terraform.tfstate"
   }
 }
 # Configure the Azure provider
 provider "azurerm" {
-  version = "=1.44.0"
+  version = "=2.0.0"
+  features {
+   
+  }
 }
+ 
+
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location_name
 }
 
+data "azurerm_client_config" "current" {}
 data "azurerm_subscription" "primary" {}
 data "azurerm_role_definition" "contributor" {
   name = "Contributor"
@@ -64,5 +70,83 @@ resource "azurerm_function_app" "main" {
   }
   version="~3"
 
+}
+ 
+resource "azurerm_key_vault_access_policy" "appAccess" {
+  key_vault_id = azurerm_key_vault.main.id
+
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  object_id                   = azurerm_function_app.main.identity.0.principal_id
+
+  key_permissions = [
+      "create",  "get",   "list", "sign", "verify" 
+    ]
+
+    secret_permissions = [
+       "get", "list" 
+    ]
+
+    certificate_permissions = [
+    "get",
+    "getissuers",
+    "list",
+    "listissuers" 
+  ]
+
+}
+
+
+resource "azurerm_key_vault_access_policy" "fullaccess" {
+  key_vault_id = azurerm_key_vault.main.id
+
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  object_id                   = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+      "backup", "create", "decrypt", "delete", "encrypt", "get", "import", "list", "purge", "recover", "restore", "sign", "unwrapKey", "update", "verify","wrapKey"
+    ]
+
+
+    secret_permissions = [
+      "backup","delete","get", "list","purge","recover","restore","set"
+    ]
+
+    storage_permissions = [
+      "backup","delete", "deletesas", "get", "getsas", "list", "listsas", "purge", "recover", "regeneratekey", "restore", "set", "setsas","update"
+    ]
+
+    certificate_permissions = [
+    "backup",
+    "create",
+    "delete",
+    "deleteissuers",
+    "get",
+    "getissuers",
+    "import",
+    "list",
+    "listissuers",
+    "managecontacts",
+    "manageissuers",
+    "purge",
+    "recover",
+    "restore",
+    "setissuers",
+    "update",
+  ]
+
+}
+
+resource "azurerm_key_vault" "main" {
+  name                        = var.keyvault_name
+  location                    = azurerm_resource_group.rg.location
+  resource_group_name         = azurerm_resource_group.rg.name
+  enabled_for_disk_encryption = true
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  soft_delete_enabled         = true
+  purge_protection_enabled    = false
+
+  sku_name = "standard"
+
+   
 }
 
