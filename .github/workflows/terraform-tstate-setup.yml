@@ -69,6 +69,23 @@ jobs:
         terraform init -reconfigure
         popd
 
+
+    - name: 'Terraform Setup Cosmos Account'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        export ARM_ACCESS_KEY=$(az keyvault secret show --name ${{ steps.tfsetup.outputs.secret_name }} --vault-name ${{ steps.tfsetup.outputs.keyvault_name }} --query value -o tsv)
+        export ARM_CLIENT_ID='${{secrets.ARM_CLIENT_ID}}'
+        export ARM_CLIENT_SECRET='${{secrets.ARM_CLIENT_SECRET}}'
+        export ARM_SUBSCRIPTION_ID=$(az account show --query id | xargs)
+        export ARM_TENANT_ID=$(az account show --query tenantId | xargs)
+
+        ls
+        cd src/
+        terraform plan -out=tf.plan -target=azurerm_cosmosdb_account.db
+        terraform apply tf.plan
+        popd
+
     - name: 'Terraform Setup Function First'
       shell: bash
       run: |

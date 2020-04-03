@@ -150,3 +150,71 @@ resource "azurerm_key_vault" "main" {
    
 }
 
+resource "azurerm_cosmosdb_account" "db" {
+  name                      = var.cosmos_name
+  location                  = azurerm_resource_group.rg.location
+  resource_group_name       = azurerm_resource_group.rg.name
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
+
+  consistency_policy {
+    consistency_level       = "BoundedStaleness"
+    max_interval_in_seconds = 10
+    max_staleness_prefix    = 200
+  }
+
+  geo_location {
+    prefix            = "fluffy1-customid"
+    location          = azurerm_resource_group.rg.location
+    failover_priority = 0
+  }
+}
+
+resource "azurerm_key_vault_secret" "cosmos_primary_key" {
+  name         = "cosmosPrimaryKey"
+  value        = azurerm_cosmosdb_account.db.primary_master_key
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Production"
+  }
+} 
+
+resource "azurerm_key_vault_secret" "cosmosEmulatorPrimaryKey" {
+  name         = "cosmosEmulatorPrimaryKey"
+  value        = var.cosmosEmulatorPrimaryKey
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Production"
+  }
+} 
+
+resource "azurerm_key_vault_secret" "cosmosConfigTemplate" {
+  name         = "cosmosConfigTemplate"
+  value        = var.cosmosConfigTemplate
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Production"
+  }
+} 
+
+resource "azurerm_key_vault_secret" "oauth2Clients" {
+  name         = "oauth2Clients"
+  value        = var.oauth2Clients
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Production"
+  }
+} 
+resource "azurerm_key_vault_secret" "oauth2ClientsIdentityserver" {
+  name         = "oauth2ClientsIdentityserver"
+  value        = var.oauth2ClientsIdentityserver
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Production"
+  }
+} 
