@@ -170,8 +170,26 @@ resource "azurerm_cosmosdb_account" "db" {
   }
 }
 
-resource "azurerm_key_vault_secret" "cosmos_primary_key" {
-  name         = "cosmosPrimaryKey"
+resource "azurerm_cosmosdb_sql_database" "sql_database" {
+  name                = "IdentityServer"
+  resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
+  account_name        = var.cosmos_name
+  throughput          = 400
+}
+resource "azurerm_cosmosdb_sql_container" "container_operational" {
+  name                = "operational"
+  resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
+  account_name        = var.cosmos_name
+  database_name       = "IdentityServer"
+  partition_key_path  = "/id"
+  throughput          = 400
+
+  default_ttl         = -1
+}
+ 
+
+resource "azurerm_key_vault_secret" "cosmosPrimaryKeyProduction" {
+  name         = "cosmosPrimaryKeyProduction"
   value        = azurerm_cosmosdb_account.db.primary_master_key
   key_vault_id = azurerm_key_vault.main.id
 
@@ -180,9 +198,9 @@ resource "azurerm_key_vault_secret" "cosmos_primary_key" {
   }
 } 
 
-resource "azurerm_key_vault_secret" "cosmosEmulatorPrimaryKey" {
-  name         = "cosmosEmulatorPrimaryKey"
-  value        = var.cosmosEmulatorPrimaryKey
+resource "azurerm_key_vault_secret" "cosmosPrimaryKeyEmulator" {
+  name         = "cosmosPrimaryKeyEmulator"
+  value        = var.cosmosPrimaryKeyEmulator
   key_vault_id = azurerm_key_vault.main.id
 
   tags = {
@@ -190,9 +208,19 @@ resource "azurerm_key_vault_secret" "cosmosEmulatorPrimaryKey" {
   }
 } 
 
-resource "azurerm_key_vault_secret" "cosmosConfigTemplate" {
-  name         = "cosmosConfigTemplate"
-  value        = var.cosmosConfigTemplate
+resource "azurerm_key_vault_secret" "cosmosConfigTemplateEmulator" {
+  name         = "cosmosConfigTemplateEmulator"
+  value        = var.cosmosConfigTemplateEmulator
+  key_vault_id = azurerm_key_vault.main.id
+
+  tags = {
+    environment = "Dev"
+  }
+} 
+
+resource "azurerm_key_vault_secret" "cosmosConfigTemplateProduction" {
+  name         = "cosmosConfigTemplateProduction"
+  value        = var.cosmosConfigTemplateProduction
   key_vault_id = azurerm_key_vault.main.id
 
   tags = {
@@ -200,18 +228,12 @@ resource "azurerm_key_vault_secret" "cosmosConfigTemplate" {
   }
 } 
 
-resource "azurerm_key_vault_secret" "oauth2Clients" {
-  name         = "oauth2Clients"
-  value        = var.oauth2Clients
-  key_vault_id = azurerm_key_vault.main.id
 
-  tags = {
-    environment = "Production"
-  }
-} 
-resource "azurerm_key_vault_secret" "oauth2ClientsIdentityserver" {
-  name         = "oauth2ClientsIdentityserver"
-  value        = var.oauth2ClientsIdentityserver
+
+
+resource "azurerm_key_vault_secret" "oauth2ClientsIdentityServer" {
+  name         = "oauth2ClientsIdentityServer"
+  value        = var.oauth2ClientsIdentityServer
   key_vault_id = azurerm_key_vault.main.id
 
   tags = {

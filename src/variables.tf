@@ -38,23 +38,23 @@ variable "cosmos_name" {
   type        = string
 }
 
-variable "cosmosConfigTemplate" {
-  description = "(Required) The main cosmosConfigTemplate.  BASE64 encoded JSON "
+variable "cosmosConfigTemplateEmulator" {
+  description = "(Required) The main cosmosConfigTemplateEmulator.  BASE64 encoded JSON "
+  type        = string
+}
+variable "cosmosConfigTemplateProduction" {
+  description = "(Required) The main cosmosConfcosmosConfigTemplateProductionigTemplate.  BASE64 encoded JSON "
   type        = string
 }
 
-variable "oauth2Clients" {
-  description = "(Required) The main oauth2Clients.  BASE64 encoded JSON "
+
+variable "oauth2ClientsIdentityServer" {
+  description = "(Required) The main oauth2ClientsIdentityServer.  BASE64 encoded JSON "
   type        = string
 }
 
-variable "oauth2ClientsIdentityserver" {
-  description = "(Required) The main oauth2ClientsIdentityserver.  BASE64 encoded JSON "
-  type        = string
-}
-
-variable "cosmosEmulatorPrimaryKey" {
-  description = "(Required) The main cosmosEmulatorPrimaryKey.  "
+variable "cosmosPrimaryKeyEmulator" {
+  description = "(Required) The main cosmosPrimaryKeyEmulator.  "
   type        = string
 }
 
