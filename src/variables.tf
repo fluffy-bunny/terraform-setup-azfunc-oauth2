@@ -58,7 +58,15 @@ variable "cosmosPrimaryKeyEmulator" {
   type        = string
 }
 
+variable "api_fluffy_oauth2_name" {
+  description = "(Required) The main api_fluffy_oauth2_name.  "
+  type        = string
+}
 
+variable "api_management_name" {
+  description = "(Required) The main api_management_name.  "
+  type        = string
+}
 
 variable "tags" {
   description = "Tags to help identify various services."

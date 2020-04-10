@@ -6,6 +6,8 @@ app_insights_name = "appis-azfuncfluffyoauth2"
 func_name = "azfunc-fluffyoauth2"
 keyvault_name = "kv-fluffyoauth2"
 cosmos_name = "cosmos-fluffyoauth2"
+api_management_name = "apim-fluffyoauth2"
+api_fluffy_oauth2_name= "api-fluffy-oauth2"
 
 cosmosConfigTemplateEmulator = "ewoJInVzZUNvc21vcyI6IHRydWUsCgkidXJpIjogImh0dHBzOi8vbG9jYWxob3N0OjgwODEiLAoJInByaW1hcnlLZXkiOiAie3twcmltYXJ5S2V5fX0iLAoJInByaW1hcnlDb25uZWN0aW9uU3RyaW5nIjogIkFjY291bnRFbmRwb2ludD1odHRwczovL2xvY2FsaG9zdDo4MDgxLztBY2NvdW50S2V5PXt7cHJpbWFyeUtleX19IiwKCSJpZGVudGl0eVNlcnZlck9wZXJhdGlvbmFsU3RvcmUiOiB7CgkJImRhdGFiYXNlIjogIklkZW50aXR5U2VydmVyIiwKCQkiY29sbGVjdGlvbiI6ICJvcGVyYXRpb25hbCIKCX0KfQ=="
 cosmosPrimaryKeyEmulator = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="

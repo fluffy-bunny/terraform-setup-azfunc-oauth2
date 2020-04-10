@@ -240,3 +240,10 @@ resource "azurerm_key_vault_secret" "oauth2ClientsIdentityServer" {
     environment = "Production"
   }
 } 
+
+
+data "azurerm_api_management" "main" {
+  name                    = var.api_management_name
+  resource_group_name     = azurerm_resource_group.rg.name
+}
+
