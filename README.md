@@ -1,3 +1,5 @@
+![fluffy-bunny-banner](https://raw.githubusercontent.com/fluffy-bunny/static-assets/master/fluffy-bunny-banner.png)  
+
 # terraform-setup-fluffy-oauth2
 This project terraforms azure by providing everything needed to deploy the azFunc-guidgen function.  
 
