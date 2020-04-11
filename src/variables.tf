@@ -68,6 +68,13 @@ variable "api_management_name" {
   type        = string
 }
 
+variable "azfun_oauth2_issuer_uri" {
+  description = "(Required) azfun_oauth2_issuer_uri.  "
+  type        = string
+}
+
+ 
+
 variable "tags" {
   description = "Tags to help identify various services."
   type        = map

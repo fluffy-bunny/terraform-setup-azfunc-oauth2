@@ -67,6 +67,7 @@ resource "azurerm_function_app" "main" {
     "APPINSIGHTS_INSTRUMENTATIONKEY"                    = azurerm_application_insights.main.instrumentation_key,
     "APPLICATIONINSIGHTS_CONNECTION_STRING"             = format("InstrumentationKey=%s", azurerm_application_insights.main.instrumentation_key),
     "FUNCTIONS_WORKER_RUNTIME"                          = "dotnet"
+    "azfun-oauth2-issuer-uri"                           = var.azfun_oauth2_issuer_uri
   }
   version="~3"
 
