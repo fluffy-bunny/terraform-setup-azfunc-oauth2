@@ -79,6 +79,7 @@ variable "tags" {
   description = "Tags to help identify various services."
   type        = map
   default = {
+    org            = "ssa"
     DeployedBy     = "terraform"
     Environment    = "prod"
     OwnerEmail     = "DL-P7-OPS@p7.com"

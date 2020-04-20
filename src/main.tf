@@ -21,6 +21,7 @@ provider "azurerm" {
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location_name
+  tags     = var.tags
 }
 
 data "azurerm_client_config" "current" {}
@@ -35,6 +36,7 @@ resource "azurerm_storage_account" "main" {
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  tags                     = var.tags
 }
 
 resource "azurerm_app_service_plan" "main" {
@@ -47,12 +49,14 @@ resource "azurerm_app_service_plan" "main" {
     tier = "Dynamic"
     size = "Y1"
   }
+  tags                     = var.tags
 }
 resource "azurerm_application_insights" "main" {
   name                = var.app_insights_name
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   application_type    = "web"
+  tags                     = var.tags
 }
 resource "azurerm_function_app" "main" {
   name                      = var.func_name
@@ -70,6 +74,7 @@ resource "azurerm_function_app" "main" {
     "azfun-oauth2-issuer-uri"                           = var.azfun_oauth2_issuer_uri
   }
   version="~3"
+  tags                     = var.tags
 
 }
  
@@ -147,6 +152,7 @@ resource "azurerm_key_vault" "main" {
   purge_protection_enabled    = false
 
   sku_name = "standard"
+  tags                     = var.tags
 
    
 }
@@ -169,6 +175,7 @@ resource "azurerm_cosmosdb_account" "db" {
     location          = azurerm_resource_group.rg.location
     failover_priority = 0
   }
+  tags                     = var.tags
 }
 
 resource "azurerm_cosmosdb_sql_database" "sql_database" {
